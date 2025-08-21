@@ -183,6 +183,7 @@ func newProxyHandler(nomadAddress *url.URL, jobHandler *admissionctrl.JobHandler
 
 		var err error
 		if isRegister(r) {
+			appLogger.InfoContext(ctx, "REGISTER received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP)
 			r, err = handleRegister(r, appLogger, jobHandler)
 
 		} else if isPlan(r) {
