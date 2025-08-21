@@ -16,7 +16,7 @@
     "ModifyIndex": 12,
     "Multiregion": null,
     "Name": "example",
-    "Namespace": "default",
+    "Namespace": "test",
     "NomadTokenID": "",
     "ParameterizedJob": null,
     "ParentID": "",
