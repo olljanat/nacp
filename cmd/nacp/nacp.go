@@ -53,8 +53,8 @@ type contextKeyValidationError struct{}
 var (
 	ctxWarnings        = contextKeyWarnings{}
 	ctxValidationError = contextKeyValidationError{}
-	jobPathRegex       = regexp.MustCompile(`^/v1/job/[a-zA-Z]+[a-z-Z0-9\-]*$`)
-	jobPlanPathRegex   = regexp.MustCompile(`^/v1/job/[a-zA-Z]+[a-z-Z0-9\-]*/plan$`)
+	jobPathRegex       = regexp.MustCompile(`^/v1/job/[a-zA-Z]+[a-z-Z0-9\-]*`)
+	jobPlanPathRegex   = regexp.MustCompile(`^/v1/job/[a-zA-Z]+[a-z-Z0-9\-]*/plan`)
 
 	nomadTimeout = 310 * time.Second
 )
@@ -175,7 +175,7 @@ func newProxyHandler(nomadAddress *url.URL, jobHandler *admissionctrl.JobHandler
 			}
 			appLogger.InfoContext(ctx, "Request received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP, "accessorID", reqCtx.AccessorID)
 		} else {
-			appLogger.InfoContext(ctx, "Request received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP)
+			// appLogger.InfoContext(ctx, "Request received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP)
 		}
 
 		ctx = context.WithValue(ctx, "request_context", reqCtx)
@@ -186,9 +186,11 @@ func newProxyHandler(nomadAddress *url.URL, jobHandler *admissionctrl.JobHandler
 			r, err = handleRegister(r, appLogger, jobHandler)
 
 		} else if isPlan(r) {
+			appLogger.InfoContext(ctx, "PLAN received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP)
 			r, err = handlePlan(r, appLogger, jobHandler)
 
 		} else if isValidate(r) {
+			appLogger.InfoContext(ctx, "VALIDATE received", "path", r.URL.Path, "method", r.Method, "clientIP", reqCtx.ClientIP)
 			r, err = handleValidate(r, appLogger, jobHandler)
 
 		}
